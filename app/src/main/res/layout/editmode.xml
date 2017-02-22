@@ -33,7 +33,7 @@
                 android:maxWidth="20dp"
                 android:onClick="clicksave"
                 android:padding="0dp"
-                android:text="저장" />
+                android:text="@string/Save" />
 
             <TextView
                 android:id="@+id/week2"
@@ -42,7 +42,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/topline"
                 android:gravity="center"
-                android:text="월" />
+                android:text="@string/Monday" />
 
             <TextView
                 android:id="@+id/week3"
@@ -51,7 +51,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/topline"
                 android:gravity="center"
-                android:text="화" />
+                android:text="@string/Tuesday" />
 
             <TextView
                 android:id="@+id/week4"
@@ -60,7 +60,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/topline"
                 android:gravity="center"
-                android:text="수" />
+                android:text="@string/Wednesday" />
 
             <TextView
                 android:id="@+id/week5"
@@ -69,7 +69,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/topline"
                 android:gravity="center"
-                android:text="목" />
+                android:text="@string/Thursday" />
 
             <TextView
                 android:id="@+id/week6"
@@ -78,7 +78,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/topline"
                 android:gravity="center"
-                android:text="금" />
+                android:text="@string/Saturday" />
         </TableRow>
 
         <TableRow

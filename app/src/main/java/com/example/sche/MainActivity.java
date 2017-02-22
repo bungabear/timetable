@@ -102,7 +102,7 @@ public class MainActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		menu.add(0,1,0,"시간표 수정모드");
+		menu.add(0,1,0, R.string.EditMode);
 		return true;
 	}
 

@@ -1,9 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">시간표</string>
+    <string name="app_name">TimeTable</string>
     <string name="action_settings">Setting</string>
     <string name="hello_world">Hello world!</string>
     <string name="T1"></string>
+    <string name="Sunday">Sunday</string>
+    <string name="Monday">Monday</string>
+    <string name="Tuesday">Tuesday</string>
+    <string name="Wednesday">Wednesday</string>
+    <string name="Thursday">Thursday</string>
+    <string name="Friday">Friday</string>
+    <string name="Saturday">Saturday</string>
+    <string name="Save">Save</string>
+    <string name="EditMode">EditMode</string>
+    <string name="ViewMode">ViewMode</string>
 
 </resources>
