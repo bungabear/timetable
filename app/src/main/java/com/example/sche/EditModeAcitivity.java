@@ -1,7 +1,6 @@
 package com.example.sche;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -33,7 +32,7 @@ public class EditModeAcitivity extends Activity {
 		//설정 저장소에 data.xml파일에 접근 읽기/쓰기가능
 		data = getSharedPreferences("data",0);
 
-		String subject = "";
+		String subject;
 		for(int i = 0 ; i < 9 ; i++){
 			for(int j = 0 ; j < 5 ; j++){
 				subject = data.getString(""+i+j, "");
@@ -46,18 +45,15 @@ public class EditModeAcitivity extends Activity {
 
 	public void save(View v){
 		SharedPreferences.Editor editor = data.edit();
-		String subject = "";
+		String subject;
 		for(int i = 0 ; i < 9 ; i++){
 			for(int j = 0 ; j < 5 ; j++){
 				subject = e[i][j].getText().toString();
 				editor.putString(""+i+j, subject);
-				Log.d(TAG, "saveData: " + i + j + subject);
 			}
 		}
 		editor.commit();
-
-		Intent MainActivity = new Intent(this,ViewModeActivity.class);
-		startActivity(MainActivity);
+		finish();
 	}
 	
 	
@@ -70,11 +66,9 @@ public class EditModeAcitivity extends Activity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// TODO Auto-generated method stub
 		switch(item.getItemId()){
 		case 1:
-			Intent MainActivity = new Intent(this,ViewModeActivity.class);
-			startActivity(MainActivity);
+			finish();
 			break;
 		}
 		return super.onOptionsItemSelected(item);
