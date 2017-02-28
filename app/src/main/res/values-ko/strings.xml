@@ -15,5 +15,6 @@
     <string name="editMode">편집모드</string>
     <string name="viewMode">보기모드</string>
     <string name="edit">수정</string>
+    <string name="checkSat">토요일 보기</string>
 
 </resources>

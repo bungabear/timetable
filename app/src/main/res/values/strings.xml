@@ -15,6 +15,7 @@
     <string name="editMode">EditMode</string>
     <string name="viewMode">ViewMode</string>
     <string name="edit">Edit</string>
+    <string name="checkSat">Show Saturday</string>
 
 
 </resources>
