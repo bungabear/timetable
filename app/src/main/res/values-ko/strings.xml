@@ -4,16 +4,16 @@
     <string name="app_name">시간표</string>
     <string name="action_settings">Setting</string>
     <string name="hello_world">Hello world!</string>
-    <string name="T1"></string>
-    <string name="Sunday">일</string>
-    <string name="Monday">월</string>
-    <string name="Tuesday">화</string>
-    <string name="Wednesday">수</string>
-    <string name="Thursday">목</string>
-    <string name="Friday">금</string>
-    <string name="Saturday">토</string>
-    <string name="Save">저장</string>
-    <string name="EditMode">편집모드</string>
-    <string name="ViewMode">보기모드</string>
+    <string name="sun">일</string>
+    <string name="mon">월</string>
+    <string name="tue">화</string>
+    <string name="wed">수</string>
+    <string name="thu">목</string>
+    <string name="fri">금</string>
+    <string name="sat">토</string>
+    <string name="save">저장</string>
+    <string name="editMode">편집모드</string>
+    <string name="viewMode">보기모드</string>
+    <string name="edit">수정</string>
 
 </resources>
