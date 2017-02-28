@@ -93,7 +93,12 @@ public class TimeTableActivity extends Activity implements View.OnClickListener 
 
 		//수업교시 입력
 		for(int i = 1; i < 15; i++){
-			editTexts[i][0].setText((i<10)? ""+i : "N" + (i-9));
+			String time = data.getString(""+i+0,"");
+			if(time.equals("")){
+				editTexts[i][0].setText((i<10)? ""+i : "N" + (i-9));
+			} else {
+				editTexts[i][0].setText(time);
+			}
 		}
 
 		//설정 저장소에 data.xml파일에 접근 읽기/쓰기가능
@@ -127,7 +132,7 @@ public class TimeTableActivity extends Activity implements View.OnClickListener 
 		if(v.getTag().equals("edit")){
 			//입력 활성화
 			for(int i = 1 ; i < 15 ; i++){
-				for(int j = 1 ; j < limitColumns ; j++){
+				for(int j = 0 ; j < limitColumns ; j++){
 					editTexts[i][j].setFocusable(true);
 					editTexts[i][j].setFocusableInTouchMode(true);
 					editTexts[i][j].setCursorVisible(true);
@@ -142,7 +147,7 @@ public class TimeTableActivity extends Activity implements View.OnClickListener 
 
 			//입력 비활성화
 			for(int i = 1 ; i < 15 ; i++){
-				for(int j = 1 ; j < limitColumns ; j++){
+				for(int j = 0 ; j < limitColumns ; j++){
 					editTexts[i][j].setFocusable(false);
 					editTexts[i][j].setCursorVisible(false);
 				}
@@ -150,13 +155,24 @@ public class TimeTableActivity extends Activity implements View.OnClickListener 
 
 			//시간표 값 저장
 			SharedPreferences.Editor editor = data.edit();
-			String subject;
+			String value;
 			for(int i = 1 ; i < 15 ; i++){
-				for(int j = 1 ; j < limitColumns ; j++){
-					subject = editTexts[i][j].getText().toString();
-					editor.putString(""+i+j, subject);
+				for(int j = 0 ; j < limitColumns ; j++){
+					//시간명에 변경이 있는지 확인
+					if(j==0){
+						value = editTexts[i][0].getText().toString();
+						//기본값이면 비움.
+						if(value.equals(String.valueOf(i)) || value.equals("N" + String.valueOf(i-9))){
+							editor.putString(""+i+j,"");
+							continue;
+						}
+					} else {
+						value = editTexts[i][j].getText().toString();
+					}
+					editor.putString(""+i+j, value);
 				}
 			}
+
 			editor.commit();
 
 			//버튼 변경

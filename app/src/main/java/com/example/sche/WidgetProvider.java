@@ -96,7 +96,8 @@ public class WidgetProvider extends AppWidgetProvider {
                         //요일을 넣어준다.
                         timetableValue[i][j] = resource.getString(resource.getIdentifier(WeekDays.values()[j].name(),"string", context.getPackageName()));
                     }
-                } else if(j==0) {
+                    //저장된 시간부 값이 비어있지않으면 넣어줌.
+                } else if(j==0 && data.getString(""+i+j,"").equals("")) {
                     timetableValue[i][0] = (i<10)? ""+i : "N"+(i-9);
 
                 } else {
