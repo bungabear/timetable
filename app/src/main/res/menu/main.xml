@@ -5,5 +5,13 @@
         android:checkable="true"
         android:checked="true"
         />
+    <item
+        android:id="@+id/item2"
+        android:title="@string/backup"
+        />
+    <item
+        android:id="@+id/item3"
+        android:title="@string/restore"
+        />
 
 </menu>
