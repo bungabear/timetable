@@ -8,11 +8,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.GridLayout;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
@@ -23,10 +27,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 
 import java.io.File;
@@ -41,7 +44,9 @@ import java.util.Map;
 public class TimeTableActivity extends Activity implements View.OnClickListener, TextView.OnEditorActionListener, View.OnFocusChangeListener {
     public static final String TAG = "ScheTest";
     private EditText editTexts[][] = new EditText[15][7];
+    private  ImageView editButton;
     private SharedPreferences data;
+    private int iconsize;
     private int limitColumns;
 
     private boolean showSat = true;
@@ -55,7 +60,7 @@ public class TimeTableActivity extends Activity implements View.OnClickListener,
 
     @Override
     public void onFocusChange(View v, boolean hasFocus) {
-        int[] tags = (int[]) v.getTag();
+        int[] tags = new int[]{v.getId()/10, v.getId()%10};
         String text = ((EditText) v).getText().toString();
 //		Log.d(TAG, "onEditorAction: " + tags[0] + tags[1] + text + hasFocus);
         //포커스를 잃은 칸이 둘쨋줄 이후고 값이 period이면 값복사
@@ -89,16 +94,6 @@ public class TimeTableActivity extends Activity implements View.OnClickListener,
         linearLayout.setPadding(16, 16, 16, 16);
         linearLayout.setBackgroundResource(R.drawable.base);
 
-        TableLayout tableLayout = new TableLayout(this);
-        TableLayout.LayoutParams tableParams = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT, 1);
-        TableRow.LayoutParams rowParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1);
-        tableLayout.setLayoutParams(tableParams);
-        TableRow[] tableRows = new TableRow[15];
-
-        ScrollView scrollView = new ScrollView(this);
-        scrollView.setLayoutParams(new ScrollView.LayoutParams(ScrollView.LayoutParams.MATCH_PARENT, ScrollView.LayoutParams.MATCH_PARENT));
-        scrollView.addView(tableLayout);
-        linearLayout.addView(scrollView);
 
         data = getSharedPreferences("data", 0);
         showSat = data.getBoolean("showSat", true);
@@ -107,42 +102,73 @@ public class TimeTableActivity extends Activity implements View.OnClickListener,
         } else {
             limitColumns = 6;
         }
+
+        GridLayout gridLayout = new GridLayout(this);
+        gridLayout.setLayoutParams(lp);
+        gridLayout.setRowCount(15);
+        gridLayout.setColumnCount(limitColumns);
+        gridLayout.setOrientation(GridLayout.VERTICAL);
+
+        ScrollView scrollView = new ScrollView(this);
+        scrollView.setLayoutParams(new ScrollView.LayoutParams(ScrollView.LayoutParams.MATCH_PARENT, ScrollView.LayoutParams.MATCH_PARENT));
+        scrollView.addView(gridLayout);
+        linearLayout.addView(scrollView);
+
+        //화면 크기를 받아 뷰의 크기를 계산한다
+        Point size = new Point();
+        getWindowManager().getDefaultDisplay().getSize(size);
+        int cellWidth = (size.x-32)/limitColumns , cellHeight = (size.y-190-32)/15;
+        int squreWidth = (cellWidth>cellHeight)? cellHeight : cellWidth ;
+        iconsize = squreWidth-45;
+
         //뷰 생성 및 초기화
-        for (int i = 0; i < 15; i++) {
-            tableRows[i] = new TableRow(this);
-            tableRows[i].setLayoutParams(tableParams);
-            tableLayout.addView(tableRows[i]);
             for (int j = 0; j < limitColumns; j++) {
-                editTexts[i][j] = new EditText(this);
-                editTexts[i][j].setLayoutParams(rowParams);
-                editTexts[i][j].setBackgroundResource(R.drawable.topcell);
-                editTexts[i][j].setGravity(Gravity.CENTER);
-                editTexts[i][j].setFocusable(false);
-                editTexts[i][j].setCursorVisible(false);
-                editTexts[i][j].setSingleLine();
-                editTexts[i][j].setMovementMethod(null);
-                editTexts[i][j].setPadding(0, 0, 0, 0);
-                editTexts[i][j].setHeight(113);
-                editTexts[i][j].setId((i * 10) + j);
-                editTexts[i][j].setTag(new int[]{i, j});
-                editTexts[i][j].setOnEditorActionListener(this);
-                editTexts[i][j].setOnFocusChangeListener(this);
-                tableRows[i].addView(editTexts[i][j]);
-                // Todo 커서를 보이게 해줘야함.
-                // 연속 입력을 위한 포커스 재설정. EditorActionListener를 설정하면 등록순서인 오른쪽으로 가버림.
-                if (i != 0 && j != 0) {
-                    int k = i, l = j;
-                    if (k == 14) {
-                        k = 1;
-                        l++;
-                    } else {
-                        k++;
+                for (int i = 0; i < 15; i++) {
+                    if (i==0 && j==0){
+                        editButton = new ImageView(this);
+                        Bitmap icon = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.edit),iconsize , iconsize,false);
+                        editButton.setImageBitmap(icon);
+                        editButton.setScaleType(ImageView.ScaleType.CENTER);
+                        editButton.setLayoutParams( new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                        editButton.setBackgroundResource(R.drawable.topcell);
+                        editButton.setOnClickListener(this);
+                        editButton.setTag("edit");
+                        gridLayout.addView(editButton,cellWidth, cellHeight);
+                        continue;
                     }
-                    editTexts[i][j].setNextFocusForwardId((k * 10) + l);
-                    editTexts[i][j].setNextFocusDownId((k * 10) + l);
+                    editTexts[i][j] = new EditText(this);
+                    editTexts[i][j].setLayoutParams(lp);
+                    editTexts[i][j].setBackgroundResource(R.drawable.topcell);
+                    editTexts[i][j].setGravity(Gravity.CENTER);
+                    editTexts[i][j].setFocusable(false);
+                    editTexts[i][j].setCursorVisible(false);
+                    editTexts[i][j].setSingleLine();
+                    editTexts[i][j].setMovementMethod(null);
+                    editTexts[i][j].setPadding(0, 0, 0, 0);
+                    editTexts[i][j].setHeight(113);
+                    editTexts[i][j].setId((i * 10) + j);
+                    editTexts[i][j].setTag(null);
+                    editTexts[i][j].setOnEditorActionListener(this);
+                    editTexts[i][j].setOnFocusChangeListener(this);
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+                        gridLayout.setElevation(2);
+                    }
+                    gridLayout.addView(editTexts[i][j],cellWidth, cellHeight);
+                    // Todo 커서를 보이게 해줘야함.
+                    // 연속 입력을 위한 포커스 재설정. EditorActionListener를 설정하면 등록순서인 오른쪽으로 가버림.
+                    if (i != 0 && j != 0) {
+                        int k = i, l = j;
+                        if (k == 14) {
+                            k = 1;
+                            l++;
+                        } else {
+                            k++;
+                        }
+                        editTexts[i][j].setNextFocusForwardId((k * 10) + l);
+                        editTexts[i][j].setNextFocusDownId((k * 10) + l);
+                    }
                 }
             }
-        }
         //요일 입력
         for (int i = 1; i < limitColumns; i++) {
             editTexts[0][i].setText(getString(getResources().getIdentifier(WeekDays.values()[i].name(), "string", getPackageName())));
@@ -160,20 +186,33 @@ public class TimeTableActivity extends Activity implements View.OnClickListener,
 
         //저장된 값 불러오기.
         String subject;
-        for (int i = 1; i < 15; i++) {
-            for (int j = 1; j < limitColumns; j++) {
+        for (int j = 1; j < limitColumns; j++) {
+            for (int i = 1; i < 15; i++) {
                 subject = data.getString("" + i + j, "");
                 editTexts[i][j].setText(subject);
                 editTexts[i][j].setBackgroundResource(R.drawable.leftcell);
+                //과목 이름이 위의 셀과 같으면,
+//                if(!subject.equals("") && subject.equals(editTexts[i-1][j].getText().toString())){
+//                Log.d(TAG, "onCreate: 위와 같음 ");
+//                    editTexts[i][j].setVisibility(View.INVISIBLE);
+//                    int spansize = 2;
+//                    if(editTexts[i-1][j].getTag() != null){
+//                        spansize = Integer.parseInt(editTexts[i-1][j].getTag().toString())+1;
+//                    }
+//                    Spec spec = new spec(true, i + (j*15) - 1, spansize, GridLayout.FILL,1);
+//                    gridLayout.addView(editTexts[i-1][j], spec);
+//                }
             }
         }
 
-        editTexts[0][0].setText(getImageSpan(70, 70, getResources().getDrawable(R.drawable.edit)));
-        editTexts[0][0].setTag("edit");
-        editTexts[0][0].setOnClickListener(this);
-
         setContentView(linearLayout);
         requestWidgetUpdate();
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+
     }
 
     @Override
@@ -189,10 +228,15 @@ public class TimeTableActivity extends Activity implements View.OnClickListener,
             }
 
             //버튼 변경
-            ((TextView) v).setText(getImageSpan(70, 70, getResources().getDrawable(R.drawable.save)));
+            ((ImageView) v).setImageBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.save),iconsize,iconsize,false));
             v.setTag("save");
 
         } else if (v.getTag().equals("save")) {
+
+            //키보드 숨기기
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+
 
             //입력 비활성화
             for (int i = 1; i < 15; i++) {
@@ -225,13 +269,8 @@ public class TimeTableActivity extends Activity implements View.OnClickListener,
             editor.commit();
 
             //버튼 변경
-            ((TextView) v).setText(getImageSpan(70, 70, getResources().getDrawable(R.drawable.edit)));
+            ((ImageView) v).setImageBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.edit),iconsize,iconsize,false));
             v.setTag("edit");
-
-
-            //키보드 숨기기
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
             requestWidgetUpdate();
         }
@@ -318,7 +357,7 @@ public class TimeTableActivity extends Activity implements View.OnClickListener,
                 return null;
             }
         };
-        Spanned htmlText = Html.fromHtml("<img src=\"icon\" width=50 height=50>", imageGetter, null);
+        Spanned htmlText = Html.fromHtml("<img src=\"icon\" width="+ width + "height=" + height + ">", imageGetter, null);
         return htmlText;
     }
 
