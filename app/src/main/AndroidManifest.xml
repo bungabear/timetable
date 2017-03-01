@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.sche"
+    package="com.bungabear.sche"
     android:versionCode="5"
     android:versionName="1.6" >
 
@@ -13,17 +13,17 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.example.sche.TimeTableActivity"
+            android:name="com.bungabear.sche.TimeTableActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <action android:name="com.example.sche.CALL_ACTIVITY"/>
+                <action android:name="com.bungabear.sche.CALL_ACTIVITY"/>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <receiver android:name=".WidgetProvider" >
             <intent-filter>
-                <action android:name="com.example.sche.ACTION_CALL_ACTIVITY"/>
+                <action android:name="com.bungabear.sche.ACTION_CALL_ACTIVITY"/>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE_OPTIONS"/>
             </intent-filter>

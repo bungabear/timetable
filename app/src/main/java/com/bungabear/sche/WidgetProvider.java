@@ -1,4 +1,4 @@
-package com.example.sche;
+package com.bungabear.sche;
 
 import android.annotation.TargetApi;
 import android.app.PendingIntent;
@@ -24,7 +24,7 @@ public class WidgetProvider extends AppWidgetProvider {
     private SharedPreferences data;
     private String packageName;
     private boolean showSat;
-    private String ACTION_CALL_ACTIVITY = "com.example.sche.CALL_ACTIVITY";
+    private String ACTION_CALL_ACTIVITY = "com.bungabear.sche.CALL_ACTIVITY";
 
 
     @Override
@@ -71,7 +71,7 @@ public class WidgetProvider extends AppWidgetProvider {
         super.onReceive(context, intent);
 
         if(ACTION_CALL_ACTIVITY.equals(intent.getAction())){
-            Intent newIntent = new Intent("com.example.sche.CALL_ACTIVITY");
+            Intent newIntent = new Intent("com.bungabear.sche.CALL_ACTIVITY");
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(newIntent);
         }
@@ -119,18 +119,22 @@ public class WidgetProvider extends AppWidgetProvider {
         }
         Log.d(TAG, "makeTable: setFontSize" + fontsize);
 
+        //cell생성
         for (int j = 0; j < 15; j++) {
             RemoteViews horizentalLinearLayout = new RemoteViews(packageName, R.layout.widget_horizontal_linearlayout);
             for (int k = 0; k < limitColimns; k++) {
                 int id;
-                if (j == 0 && k == 0) {
-                    //이미지 넣고싶은데 안들어감..
+//                if (j == 0 && k == 0) {
+//                    이미지 넣고싶은데 안들어감..
 //                    RemoteViews imageView = new RemoteViews(packageName, R.layout.widget_mode_cell);
 //                    imageView.setImageViewResource(R.id.widget_textview,R.drawable.edit);
 //                    horizentalLinearLayout.addView(R.id.widget_horizoontal_linearlayout, imageView);
-                    continue;
-                } else if (j == 0 || k == 0) {
+//                    continue;
+//                } else
+                if (j == 0 || k == 0) {
                     id = R.layout.widget_top_cell;
+                } else if(timetableValue[j][k].equals("")){
+                    id = R.layout.widget_empty_cell;
                 } else {
                     id = R.layout.widget_cell;
                 }

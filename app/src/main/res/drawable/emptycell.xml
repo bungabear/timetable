@@ -1,8 +1,11 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent" >
 
+   <stroke android:width="0.2dip"
+       android:color="#00000000"/>
+
    <solid
        android:layout_height="match_parent"
-       android:color="#ff00bfFf" />
+       android:color="#00000000" />
 
 </shape>

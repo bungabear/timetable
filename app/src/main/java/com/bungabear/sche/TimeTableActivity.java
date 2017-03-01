@@ -1,4 +1,4 @@
-package com.example.sche;
+package com.bungabear.sche;
 
 import android.app.Activity;
 import android.appwidget.AppWidgetManager;
@@ -10,7 +10,9 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.Spanned;
+import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,7 +24,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-public class TimeTableActivity extends Activity implements View.OnClickListener {
+public class TimeTableActivity extends Activity implements View.OnClickListener, TextView.OnEditorActionListener, View.OnFocusChangeListener {
 	public static final String TAG = "ScheTest";
 	private EditText editTexts[][] = new EditText[15][7];
 	//설정 저장객체 생성
@@ -30,6 +32,24 @@ public class TimeTableActivity extends Activity implements View.OnClickListener 
 	private boolean showSat = true;
 	private int limitColumns;
 	private Drawable save, edit;
+
+	@Override
+	public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+		Log.d(TAG, "onEditorAction: " + actionId);
+
+		return false;
+	}
+
+	@Override
+	public void onFocusChange(View v, boolean hasFocus) {
+		int[] tags = (int[])v.getTag();
+		String text = ((EditText)v).getText().toString();
+//		Log.d(TAG, "onEditorAction: " + tags[0] + tags[1] + text + hasFocus);
+		//포커스를 잃은 칸이 둘쨋줄 이후고 값이 period이면 값복사
+		if(!hasFocus && tags[0] >= 2 && text.equals(".")){
+			((EditText)v).setText(editTexts[tags[0]-1][tags[1]].getText().toString());
+		}
+	}
 
 
 	enum WeekDays{
@@ -75,7 +95,7 @@ public class TimeTableActivity extends Activity implements View.OnClickListener 
 			for(int j = 0 ; j < limitColumns ; j++){
 				editTexts[i][j] = new EditText(this);
 				editTexts[i][j].setLayoutParams(rowParams);
-				editTexts[i][j].setBackgroundResource(R.drawable.topline);
+				editTexts[i][j].setBackgroundResource(R.drawable.topcell);
 				editTexts[i][j].setGravity(Gravity.CENTER);
 				editTexts[i][j].setFocusable(false);
 				editTexts[i][j].setCursorVisible(false);
@@ -83,7 +103,24 @@ public class TimeTableActivity extends Activity implements View.OnClickListener 
 				editTexts[i][j].setMovementMethod(null);
 				editTexts[i][j].setPadding(0,0,0,0);
 				editTexts[i][j].setHeight(113);
-				tableRows[i].addView(editTexts[i][j]);
+				editTexts[i][j].setId((i*10)+j);
+				editTexts[i][j].setTag(new int[]{i,j});
+				editTexts[i][j].setOnEditorActionListener(this);
+				editTexts[i][j].setOnFocusChangeListener(this);
+                tableRows[i].addView(editTexts[i][j]);
+				// Todo 커서를 보이게 해줘야함.
+				// 연속 입력을 위한 포커스 재설정. EditorActionListener를 설정하면 등록순서인 오른쪽으로 가버림.
+				if(i !=0  &&j != 0){
+					int k = i, l = j;
+					if(k == 14){
+						k = 1;
+						l++;
+					} else {
+						k++;
+					}
+					editTexts[i][j].setNextFocusForwardId((k*10)+l);
+					editTexts[i][j].setNextFocusDownId((k*10)+l);
+				}
 			}
 		}
 		//요일 입력
@@ -101,23 +138,15 @@ public class TimeTableActivity extends Activity implements View.OnClickListener 
 			}
 		}
 
-		//설정 저장소에 data.xml파일에 접근 읽기/쓰기가능
-
-
 		//저장된 값 불러오기.
 		String subject;
 		for(int i = 1; i < 15; i++){
 			for(int j = 1 ; j < limitColumns ; j++){
 				subject = data.getString(""+i+j, "");
 				editTexts[i][j].setText(subject);
-				editTexts[i][j].setTag(new int[]{i,j});
-				editTexts[i][j].setBackgroundResource(R.drawable.leftline);
+				editTexts[i][j].setBackgroundResource(R.drawable.leftcell);
 			}
 		}
-
-
-
-
 
 		editTexts[0][0].setText(getImageSpan(70,70,getResources().getDrawable(R.drawable.edit)));
 		editTexts[0][0].setTag("edit");
