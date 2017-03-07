@@ -85,12 +85,25 @@ public class WidgetProvider extends AppWidgetProvider {
         Resources resource = context.getResources();
         Bundle options = appWidgetManager.getAppWidgetOptions(appWidgetId);
         int width = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH) ,height = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT);
-
-        showSat = data.getBoolean("showSat", true);
+        boolean clearCellInWidget = data.getBoolean("clearCellInWidget", true);
+        boolean showWidgetWeekRow = data.getBoolean("showWidgetWeekRow", true);
+        boolean showWidgetTimeColumn = data.getBoolean("showWidgetTimeColumn", true);
+        int limitRows = data.getInt("limitRows",15);
         int limitColimns = (showSat)? 7 : 6;
-        String[][] timetableValue = new String[15][7];
-        for(int i = 0 ; i < 15 ; i++){
-            for(int j = 0 ; j < limitColimns ; j++){
+
+        int startRow = 0;
+        if(!showWidgetWeekRow){
+            startRow = 1;
+        }
+        int startColumn = 0;
+        if(!showWidgetTimeColumn){
+            startColumn = 1;
+        }
+        showSat = data.getBoolean("showSat", true);
+
+        String[][] timetableValue = new String[limitRows][7];
+        for(int i = startRow ; i < limitRows ; i++){
+            for(int j = startColumn ; j < limitColimns ; j++){
                 if(i==0){
                     if(j!=0){
                         //요일을 넣어준다.
@@ -120,9 +133,9 @@ public class WidgetProvider extends AppWidgetProvider {
         Log.d(TAG, "makeTable: setFontSize" + fontsize);
 
         //cell생성
-        for (int j = 0; j < 15; j++) {
+        for (int j = startRow; j < limitRows; j++) {
             RemoteViews horizentalLinearLayout = new RemoteViews(packageName, R.layout.widget_horizontal_linearlayout);
-            for (int k = 0; k < limitColimns; k++) {
+            for (int k = startColumn; k < limitColimns; k++) {
                 int id;
 //                if (j == 0 && k == 0) {
 //                    이미지 넣고싶은데 안들어감..
@@ -131,9 +144,11 @@ public class WidgetProvider extends AppWidgetProvider {
 //                    horizentalLinearLayout.addView(R.id.widget_horizoontal_linearlayout, imageView);
 //                    continue;
 //                } else
+
+                // Choose Cell Backbround Color
                 if (j == 0 || k == 0) {
                     id = R.layout.widget_top_cell;
-                } else if(timetableValue[j][k].equals("")){
+                } else if(timetableValue[j][k].equals("") && clearCellInWidget){
                     id = R.layout.widget_empty_cell;
                 } else {
                     id = R.layout.widget_cell;

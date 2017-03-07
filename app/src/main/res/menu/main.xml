@@ -1,17 +1,44 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/item0"
+        android:title="@string/backup"
+        />
     <item
         android:id="@+id/item1"
-        android:title="@string/checkSat"
+        android:title="@string/restore"
+        />
+
+    <item
+        android:id="@+id/item2"
+        android:title="위젯 빈칸 투명하게하기"
         android:checkable="true"
         android:checked="true"
         />
     <item
-        android:id="@+id/item2"
-        android:title="@string/backup"
-        />
-    <item
         android:id="@+id/item3"
-        android:title="@string/restore"
+        android:title="위젯 요일 보이기"
+        android:checkable="true"
+        android:checked="true"
+        />
+
+    <item
+        android:id="@+id/item4"
+        android:title="위젯 시간 보이기"
+        android:checkable="true"
+        android:checked="true"
+        />
+
+    <item
+        android:id="@+id/item5"
+        android:title="행 갯수 지정"
+        />
+
+    <item
+        android:id="@+id/item6"
+        android:title="@string/checkSat"
+        android:checkable="true"
+        android:checked="true"
         />
 
 </menu>
